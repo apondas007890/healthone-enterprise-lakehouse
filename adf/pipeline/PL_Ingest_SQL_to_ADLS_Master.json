@@ -1,0 +1,72 @@
+{
+	"name": "PL_Ingest_SQL_to_ADLS_Master",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach Database",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.DatabaseList",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Execute Generic Ingestion",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "PL_Ingest_SQL_to_ADLS_Generic",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"ServerName": {
+										"value": "@pipeline().parameters.ServerName",
+										"type": "Expression"
+									},
+									"DatabaseName": {
+										"value": "@item()",
+										"type": "Expression"
+									},
+									"StorageAccountName": {
+										"value": "@pipeline().parameters.StorageAccountName",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"ServerName": {
+				"type": "string",
+				"defaultValue": "sql-healthone-lakehouse-central-india.database.windows.net"
+			},
+			"DatabaseList": {
+				"type": "array",
+				"defaultValue": [
+					"sqldb-corporate-hr",
+					"sqldb-healthone-ops"
+				]
+			},
+			"StorageAccountName": {
+				"type": "string",
+				"defaultValue": "https://sthealthonelakehouseci.dfs.core.windows.net"
+			}
+		},
+		"folder": {
+			"name": "Ingestion"
+		},
+		"annotations": []
+	}
+}
