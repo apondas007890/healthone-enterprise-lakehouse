@@ -151,13 +151,12 @@
 				"type": "string",
 				"defaultValue": "sql-healthone-lakehouse-central-india.database.windows.net"
 			},
-			"DatabaseName": {
-				"type": "string",
-				"defaultValue": "sqldb-corporate-hr"
-			},
 			"StorageAccountName": {
 				"type": "string",
 				"defaultValue": "https://sthealthonelakehouseci.dfs.core.windows.net"
+			},
+			"DatabaseName": {
+				"type": "string"
 			}
 		},
 		"annotations": []
