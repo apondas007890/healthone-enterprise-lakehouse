@@ -3,13 +3,20 @@
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
-		"pipelines": [],
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Master_Ingestion_Pipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
 		"type": "ScheduleTrigger",
 		"typeProperties": {
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2026-09-02T22:20:00",
+				"startTime": "2026-09-03T23:59:00",
 				"timeZone": "Bangladesh Standard Time"
 			}
 		}
