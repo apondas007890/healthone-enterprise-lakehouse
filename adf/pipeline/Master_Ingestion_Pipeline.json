@@ -52,7 +52,7 @@
 			"DatabaseList": {
 				"type": "array",
 				"defaultValue": [
-					"sqldb-corporate1-hr",
+					"sqldb-corporate-hr",
 					"sqldb-healthone-ops"
 				]
 			},
