@@ -157,6 +157,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "Ingestion"
+		},
 		"annotations": []
 	}
 }

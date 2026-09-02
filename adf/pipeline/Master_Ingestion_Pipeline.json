@@ -24,7 +24,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"pipeline": {
-									"referenceName": "pipeline1",
+									"referenceName": "Child_Ingestion_Pipeline",
 									"type": "PipelineReference"
 								},
 								"waitOnCompletion": true,
@@ -64,6 +64,9 @@
 				"type": "string",
 				"defaultValue": "https://sthealthonelakehouseci.dfs.core.windows.net"
 			}
+		},
+		"folder": {
+			"name": "Ingestion"
 		},
 		"annotations": []
 	}
