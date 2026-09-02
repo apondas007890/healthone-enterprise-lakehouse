@@ -6,7 +6,7 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "Master_Ingestion_Pipeline",
+					"referenceName": "PL_Ingest_SQL_to_ADLS_Master",
 					"type": "PipelineReference"
 				}
 			}
@@ -16,7 +16,7 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2026-09-02T00:00:00",
+				"startTime": "2026-09-02T10:02:00",
 				"timeZone": "Bangladesh Standard Time"
 			}
 		}
