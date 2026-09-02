@@ -9,7 +9,7 @@
 		"annotations": [],
 		"type": "AzureBlobFS",
 		"typeProperties": {
-			"url": "@{linkedService().StorageAccountName}"
+			"url": "@{concat('https://', linkedService().StorageAccountName, '.dfs.core.windows.net')}"
 		},
 		"connectVia": {
 			"referenceName": "vnet-ir-healthone-managed",
