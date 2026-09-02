@@ -102,7 +102,13 @@
 							"outputs": [
 								{
 									"referenceName": "GenericADLSgen2",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"StorageAccountName": {
+											"value": "@pipeline().parameters.StorageAccountName",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
