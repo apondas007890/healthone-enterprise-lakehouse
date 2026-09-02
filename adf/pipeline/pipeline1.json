@@ -72,7 +72,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "@concat('SELECT * FROM ', item().schemaName, '.', item().tableName)",
+										"value": "@concat('SELECT * FROM ', item().schemaName, '.', item().tableName, \n        ' WHERE updated_at >= (SELECT CAST(MAX(updated_at) AS DATE) FROM ', item().schemaName, '.', item().tableName, ')')",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
