@@ -132,6 +132,10 @@
 			"DatabaseName": {
 				"type": "string",
 				"defaultValue": "sqldb-corporate-hr"
+			},
+			"StorageAccountName": {
+				"type": "string",
+				"defaultValue": "sthealthonelakehouseci"
 			}
 		},
 		"annotations": []
