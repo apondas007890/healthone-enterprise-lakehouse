@@ -1,0 +1,41 @@
+{
+	"name": "ds_sqldb_corporate_hr",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sqldb_corporate_hr",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "control_id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "current_day",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "max_days",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "last_executed_at",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "is_active",
+				"type": "bit"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "simulation_control"
+		}
+	}
+}
