@@ -74,41 +74,12 @@
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
-								"sink": {
-									"type": "ParquetSink",
-									"storeSettings": {
-										"type": "AzureBlobFSWriteSettings"
-									},
-									"formatSettings": {
-										"type": "ParquetWriteSettings"
-									}
-								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
+								"enableStaging": false
 							},
 							"inputs": [
 								{
 									"referenceName": "GenerricAzureSQLDB_DS",
 									"type": "DatasetReference"
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "GenericADLSgen2",
-									"type": "DatasetReference",
-									"parameters": {
-										"StorageAccountName": {
-											"value": "@pipeline().parameters.StorageAccountName",
-											"type": "Expression"
-										}
-									}
 								}
 							]
 						}
@@ -124,10 +95,6 @@
 			"DatabaseName": {
 				"type": "string",
 				"defaultValue": "sqldb-corporate-hr"
-			},
-			"StorageAccountName": {
-				"type": "string",
-				"defaultValue": "sthealthonelakehouseci"
 			}
 		},
 		"annotations": []
