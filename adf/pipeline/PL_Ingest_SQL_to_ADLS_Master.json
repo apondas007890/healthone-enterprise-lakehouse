@@ -12,6 +12,7 @@
 						"value": "@pipeline().parameters.DatabaseList",
 						"type": "Expression"
 					},
+					"isSequential": false,
 					"activities": [
 						{
 							"name": "Execute Generic Ingestion",
