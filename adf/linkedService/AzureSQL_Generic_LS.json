@@ -16,10 +16,7 @@
 			"database": "@{linkedService().DatabaseName}",
 			"encrypt": "mandatory",
 			"trustServerCertificate": false,
-			"authenticationType": "SystemAssignedManagedIdentity",
-			"alwaysEncryptedSettings": {
-				"alwaysEncryptedAkvAuthType": "ManagedIdentity"
-			}
+			"authenticationType": "SystemAssignedManagedIdentity"
 		},
 		"connectVia": {
 			"referenceName": "vnet-ir-healthone-managed",
