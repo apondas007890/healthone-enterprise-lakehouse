@@ -1,0 +1,30 @@
+{
+	"name": "ls_sqldb_healthone_ops",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "sql-healthone-lakehouse-central-india.database.windows.net",
+			"database": "sqldb-healthone-ops",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "apondas007890",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "akv_healthone",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "sql-admin-password"
+			},
+			"alwaysEncryptedSettings": {
+				"alwaysEncryptedAkvAuthType": "ManagedIdentity"
+			}
+		},
+		"connectVia": {
+			"referenceName": "vnet-ir-healthone-managed",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
