@@ -100,7 +100,7 @@
 										"source": {
 											"type": "AzureSqlSource",
 											"sqlReaderQuery": {
-												"value": "@concat('SELECT * FROM ', item().schemaName, '.', item().tableName, \n        ' WHERE updated_at >= (SELECT CAST(MAX(updated_at) AS DATE) FROM ', item().schemaName, '.', item().tableName, ')')",
+												"value": "@concat('SELECT * FROM ', item().schemaName, '.', item().tableName, ' WHERE updated_at >= (SELECT CAST(MAX(updated_at) AS DATE) FROM ', item().schemaName, '.', item().tableName, ')')",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -452,7 +452,7 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2026-09-02T23:40:00",
+						"startTime": "2026-09-02T23:59:00",
 						"timeZone": "Bangladesh Standard Time",
 						"schedule": {}
 					}
