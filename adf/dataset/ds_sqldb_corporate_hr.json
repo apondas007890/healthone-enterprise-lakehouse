@@ -1,10 +1,6 @@
 {
 	"name": "ds_sqldb_corporate_hr",
 	"properties": {
-		"linkedServiceName": {
-			"referenceName": "ls_sqldb_corporate_hr",
-			"type": "LinkedServiceReference"
-		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [
