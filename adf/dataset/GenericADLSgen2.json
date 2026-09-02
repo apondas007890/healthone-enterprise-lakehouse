@@ -3,14 +3,22 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "GenericADLSgen2_LS",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"StorageAccountName": {
+					"value": "@dataset().StorageAccountName",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"StorageAccountName": {
+				"type": "String"
+			}
 		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {
-			"location": {
-				"type": "AzureBlobFSLocation"
-			},
 			"compressionCodec": "snappy"
 		},
 		"schema": []
