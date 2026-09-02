@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "Child_Ingestion_Pipeline",
 	"properties": {
 		"activities": [
 			{
