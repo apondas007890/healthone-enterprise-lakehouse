@@ -12,6 +12,7 @@
 						"value": "@pipeline().parameters.DatabaseList",
 						"type": "Expression"
 					},
+					"isSequential": false,
 					"activities": [
 						{
 							"name": "Execute Pipeline1",
@@ -28,8 +29,6 @@
 								},
 								"waitOnCompletion": true,
 								"parameters": {
-									"ServerName": "sql-healthone-lakehouse-central-india.database.windows.net",
-									"StorageAccountName": "https://sthealthonelakehouseci.dfs.core.windows.net",
 									"DatabaseName": {
 										"value": "@item()",
 										"type": "Expression"
@@ -48,6 +47,14 @@
 					"sqldb-corporate-hr",
 					"sqldb-healthone-ops"
 				]
+			},
+			"ServerName": {
+				"type": "string",
+				"defaultValue": "sql-healthone-lakehouse-central-india.database.windows.net"
+			},
+			"StorageAccountName": {
+				"type": "string",
+				"defaultValue": "https://sthealthonelakehouseci.dfs.core.windows.net"
 			}
 		},
 		"annotations": []
