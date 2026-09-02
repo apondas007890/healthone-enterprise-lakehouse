@@ -1,0 +1,10 @@
+{
+	"name": "akv_healthone",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://kv-healthone-lakehouse.vault.azure.net/"
+		}
+	}
+}
