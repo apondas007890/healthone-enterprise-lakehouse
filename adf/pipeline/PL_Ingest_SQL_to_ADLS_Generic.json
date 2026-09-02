@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT t.name AS tableName, SCHEMA_NAME(t.schema_id) AS schemaName FROM sys.tables as t",
+						"sqlReaderQuery": "SELECT QUOTENAME(t.name) AS TableName, QUOTENAME(SCHEMA_NAME(t.schema_id)) AS SchemaName FROM sys.tables as t",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -56,13 +56,13 @@
 					},
 					"activities": [
 						{
-							"name": "Copy SQL to ADLS",
+							"name": "Copy data1",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "0.12:00:00",
-								"retry": 3,
-								"retryIntervalInSeconds": 180,
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
 								"secureOutput": false,
 								"secureInput": false
 							},
@@ -70,10 +70,7 @@
 							"typeProperties": {
 								"source": {
 									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "@concat('SELECT * FROM ', item().schemaName, '.', item().tableName, ' WHERE updated_at >= (SELECT CAST(MAX(updated_at) AS DATE) FROM ', item().schemaName, '.', item().tableName, ')')",
-										"type": "Expression"
-									},
+									"sqlReaderQuery": "@concat('SELECT * FROM ', item().schemaName, '.', item().tableName, \n        ' WHERE updated_at >= (SELECT CAST(MAX(updated_at) AS DATE) FROM ', item().schemaName, '.', item().tableName, ')')",
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
@@ -126,11 +123,11 @@
 											"type": "Expression"
 										},
 										"SchemaName": {
-											"value": "@item().schemaName",
+											"value": "@item().SchemaName",
 											"type": "Expression"
 										},
 										"TableName": {
-											"value": "@item().tableName",
+											"value": "@item().TableName",
 											"type": "Expression"
 										},
 										"StorageAccountName": {
