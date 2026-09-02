@@ -1,0 +1,24 @@
+{
+	"name": "Daily_Ingestion_Trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Master_Ingestion_Pipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2026-09-02T00:00:00",
+				"timeZone": "Bangladesh Standard Time"
+			}
+		}
+	}
+}
