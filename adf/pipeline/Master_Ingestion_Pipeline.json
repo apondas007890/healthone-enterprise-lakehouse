@@ -29,6 +29,14 @@
 								},
 								"waitOnCompletion": true,
 								"parameters": {
+									"ServerName": {
+										"value": "@pipeline().parameters.ServerName",
+										"type": "Expression"
+									},
+									"StorageAccountName": {
+										"value": "@pipeline().parameters.StorageAccountName",
+										"type": "Expression"
+									},
 									"DatabaseName": {
 										"value": "@item()",
 										"type": "Expression"
