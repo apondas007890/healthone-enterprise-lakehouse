@@ -147,13 +147,16 @@
 		],
 		"parameters": {
 			"ServerName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "sql-healthone-lakehouse-central-india.database.windows.net"
 			},
 			"DatabaseName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "sqldb-corporate-hr"
 			},
 			"StorageAccountName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "https://sthealthonelakehouseci.dfs.core.windows.net"
 			}
 		},
 		"folder": {
