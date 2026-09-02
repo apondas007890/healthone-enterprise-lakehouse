@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-healthonelakehouse-centralindia"
+		},
+		"GenericAzureDataLakeStorage_LS_properties_typeProperties_url": {
+			"value": "@{linkedService().StorageAccountName}"
+		},
+		"GenericAzure_LS_properties_typeProperties_server": {
+			"value": "@{linkedService().ServerName}"
+		},
+		"GenericAzure_LS_properties_typeProperties_database": {
+			"value": "@{linkedService().DatabaseName}"
+		}
+	}
+}
