@@ -7,15 +7,15 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adf-healthonelakehouse-centralindia"
 		},
-		"GenericAzureDataLakeStorage_LS_properties_typeProperties_url": {
+		"ADLS_Generic_LS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "@{linkedService().StorageAccountName}"
 		},
-		"GenericAzure_LS_properties_typeProperties_server": {
+		"AzureSQL_Generic_LS_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "@{linkedService().ServerName}"
 		},
-		"GenericAzure_LS_properties_typeProperties_database": {
+		"AzureSQL_Generic_LS_properties_typeProperties_database": {
 			"type": "string",
 			"defaultValue": "@{linkedService().DatabaseName}"
 		}
@@ -53,7 +53,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/GenericAzureDataLakeStorage_LS')]",
+			"name": "[concat(parameters('factoryName'), '/ADLS_Generic_LS')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -65,7 +65,7 @@
 				"annotations": [],
 				"type": "AzureBlobFS",
 				"typeProperties": {
-					"url": "[parameters('GenericAzureDataLakeStorage_LS_properties_typeProperties_url')]"
+					"url": "[parameters('ADLS_Generic_LS_properties_typeProperties_url')]"
 				},
 				"connectVia": {
 					"referenceName": "vnet-ir-healthone-managed",
@@ -77,7 +77,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/GenericAzure_LS')]",
+			"name": "[concat(parameters('factoryName'), '/AzureSQL_Generic_LS')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -92,8 +92,8 @@
 				"annotations": [],
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
-					"server": "[parameters('GenericAzure_LS_properties_typeProperties_server')]",
-					"database": "[parameters('GenericAzure_LS_properties_typeProperties_database')]",
+					"server": "[parameters('AzureSQL_Generic_LS_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSQL_Generic_LS_properties_typeProperties_database')]",
 					"encrypt": "mandatory",
 					"trustServerCertificate": false,
 					"authenticationType": "SystemAssignedManagedIdentity"
@@ -108,12 +108,12 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Generic_DS_ADLS')]",
+			"name": "[concat(parameters('factoryName'), '/ADLS_Generic_DS')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "GenericAzureDataLakeStorage_LS",
+					"referenceName": "ADLS_Generic_LS",
 					"type": "LinkedServiceReference",
 					"parameters": {
 						"StorageAccountName": {
@@ -139,9 +139,6 @@
 						"type": "string"
 					}
 				},
-				"folder": {
-					"name": "Ingestion"
-				},
 				"annotations": [],
 				"type": "Parquet",
 				"typeProperties": {
@@ -152,7 +149,7 @@
 							"type": "Expression"
 						},
 						"folderPath": {
-							"value": "@concat(\n\tdataset().ServerName,\n\t'/',\n\tdataset().DatabaseName,\n\t'/',\n\tdataset().TableName,\n\t'/Year=',\n\tformatDateTime(utcnow(), 'yyyy'),\n\t'/Month=',\n\tformatDateTime(utcnow(), 'MM'),\n\t'/Day=',\n\tformatDateTime(utcnow(), 'dd')\n)",
+							"value": "@concat(dataset().ServerName,\n\t'/',\n\tdataset().DatabaseName,\n\t'/',\n\tdataset().TableName,\n\t'/Year=',\n\tformatDateTime(utcnow(), 'yyyy'),\n\t'/Month=',\n\tformatDateTime(utcnow(), 'MM'),\n\t'/Day=',\n\tformatDateTime(utcnow(), 'dd')\n)",
 							"type": "Expression"
 						},
 						"fileSystem": "bronze"
@@ -162,16 +159,16 @@
 				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/GenericAzureDataLakeStorage_LS')]"
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_Generic_LS')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/GenerricAzureSQLDB_DS')]",
+			"name": "[concat(parameters('factoryName'), '/AzureSQL_Generic_DS')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "GenericAzure_LS",
+					"referenceName": "AzureSQL_Generic_LS",
 					"type": "LinkedServiceReference",
 					"parameters": {
 						"ServerName": {
@@ -192,32 +189,29 @@
 						"type": "string"
 					}
 				},
-				"folder": {
-					"name": "Ingestion"
-				},
 				"annotations": [],
 				"type": "AzureSqlTable",
 				"schema": [],
 				"typeProperties": {}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/GenericAzure_LS')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSQL_Generic_LS')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Child_Ingestion_Pipeline')]",
+			"name": "[concat(parameters('factoryName'), '/PL_Ingest_SQL_to_ADLS_Generic')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Get a list of tables to be processed",
+						"name": "Get table list source dataset",
 						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
+							"retry": 3,
+							"retryIntervalInSeconds": 180,
 							"secureOutput": false,
 							"secureInput": false
 						},
@@ -225,12 +219,12 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
-								"sqlReaderQuery": "SELECT t.name AS tableName, SCHEMA_NAME(t.schema_id) AS schemaName FROM sys.tables as t",
+								"sqlReaderQuery": "SELECT t.name AS TableName, SCHEMA_NAME(t.schema_id) AS SchemaName FROM sys.tables as t",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
 							"dataset": {
-								"referenceName": "GenerricAzureSQLDB_DS",
+								"referenceName": "AzureSQL_Generic_DS",
 								"type": "DatasetReference",
 								"parameters": {
 									"ServerName": {
@@ -247,11 +241,11 @@
 						}
 					},
 					{
-						"name": "Iterate Over all tables",
+						"name": "Iterate over tables",
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Get a list of tables to be processed",
+								"activity": "Get table list source dataset",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -260,12 +254,12 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Get a list of tables to be processed').output.value",
+								"value": "@activity('Get table list source dataset').output.value",
 								"type": "Expression"
 							},
 							"activities": [
 								{
-									"name": "Copy data from sql DB",
+									"name": "Copy SQL to ADLS",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
@@ -280,7 +274,7 @@
 										"source": {
 											"type": "AzureSqlSource",
 											"sqlReaderQuery": {
-												"value": "@concat('SELECT * FROM ', item().schemaName, '.', item().tableName, ' WHERE updated_at >= (SELECT CAST(MAX(updated_at) AS DATE) FROM ', item().schemaName, '.', item().tableName, ')')",
+												"value": "@concat('SELECT * FROM ', item().schemaName, '.', item().tableName,' WHERE updated_at >= (SELECT CAST(MAX(updated_at) AS DATE) FROM ', item().schemaName, '.', item().tableName, ')')",
 												"type": "Expression"
 											},
 											"queryTimeout": "02:00:00",
@@ -307,7 +301,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "GenerricAzureSQLDB_DS",
+											"referenceName": "AzureSQL_Generic_DS",
 											"type": "DatasetReference",
 											"parameters": {
 												"ServerName": {
@@ -323,7 +317,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "Generic_DS_ADLS",
+											"referenceName": "ADLS_Generic_DS",
 											"type": "DatasetReference",
 											"parameters": {
 												"ServerName": {
@@ -335,11 +329,11 @@
 													"type": "Expression"
 												},
 												"SchemaName": {
-													"value": "@item().schemaName",
+													"value": "@item().SchemaName",
 													"type": "Expression"
 												},
 												"TableName": {
-													"value": "@item().tableName",
+													"value": "@item().TableName",
 													"type": "Expression"
 												},
 												"StorageAccountName": {
@@ -361,10 +355,10 @@
 					"ServerName": {
 						"type": "string"
 					},
-					"StorageAccountName": {
+					"DatabaseName": {
 						"type": "string"
 					},
-					"DatabaseName": {
+					"StorageAccountName": {
 						"type": "string"
 					}
 				},
@@ -374,18 +368,18 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/GenerricAzureSQLDB_DS')]",
-				"[concat(variables('factoryId'), '/datasets/Generic_DS_ADLS')]"
+				"[concat(variables('factoryId'), '/datasets/AzureSQL_Generic_DS')]",
+				"[concat(variables('factoryId'), '/datasets/ADLS_Generic_DS')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Master_Ingestion_Pipeline')]",
+			"name": "[concat(parameters('factoryName'), '/PL_Ingest_SQL_to_ADLS_Master')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "ForEach1",
+						"name": "ForEach Database",
 						"type": "ForEach",
 						"dependsOn": [],
 						"userProperties": [],
@@ -394,10 +388,9 @@
 								"value": "@pipeline().parameters.DatabaseList",
 								"type": "Expression"
 							},
-							"isSequential": false,
 							"activities": [
 								{
-									"name": "Execute Pipeline1",
+									"name": "Execute Generic Ingestion",
 									"type": "ExecutePipeline",
 									"dependsOn": [],
 									"policy": {
@@ -406,7 +399,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "Child_Ingestion_Pipeline",
+											"referenceName": "PL_Ingest_SQL_to_ADLS_Generic",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
@@ -415,12 +408,12 @@
 												"value": "@pipeline().parameters.ServerName",
 												"type": "Expression"
 											},
-											"StorageAccountName": {
-												"value": "@pipeline().parameters.StorageAccountName",
-												"type": "Expression"
-											},
 											"DatabaseName": {
 												"value": "@item()",
+												"type": "Expression"
+											},
+											"StorageAccountName": {
+												"value": "@pipeline().parameters.StorageAccountName",
 												"type": "Expression"
 											}
 										}
@@ -434,16 +427,16 @@
 					"elapsedTimeMetric": {}
 				},
 				"parameters": {
+					"ServerName": {
+						"type": "string",
+						"defaultValue": "sql-healthone-lakehouse-central-india.database.windows.net"
+					},
 					"DatabaseList": {
 						"type": "array",
 						"defaultValue": [
 							"sqldb-corporate-hr",
 							"sqldb-healthone-ops"
 						]
-					},
-					"ServerName": {
-						"type": "string",
-						"defaultValue": "sql-healthone-lakehouse-central-india.database.windows.net"
 					},
 					"StorageAccountName": {
 						"type": "string",
@@ -456,7 +449,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Child_Ingestion_Pipeline')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_Ingest_SQL_to_ADLS_Generic')]"
 			]
 		},
 		{
@@ -469,7 +462,7 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "Master_Ingestion_Pipeline",
+							"referenceName": "PL_Ingest_SQL_to_ADLS_Master",
 							"type": "PipelineReference"
 						},
 						"parameters": {}
@@ -480,14 +473,13 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2026-09-02T23:59:00",
-						"timeZone": "Bangladesh Standard Time",
-						"schedule": {}
+						"startTime": "2026-09-02T01:00:00",
+						"timeZone": "Bangladesh Standard Time"
 					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Master_Ingestion_Pipeline')]"
+				"[concat(variables('factoryId'), '/pipelines/PL_Ingest_SQL_to_ADLS_Master')]"
 			]
 		}
 	]

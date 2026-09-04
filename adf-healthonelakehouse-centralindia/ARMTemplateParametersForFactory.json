@@ -5,13 +5,13 @@
 		"factoryName": {
 			"value": "adf-healthonelakehouse-centralindia"
 		},
-		"GenericAzureDataLakeStorage_LS_properties_typeProperties_url": {
+		"ADLS_Generic_LS_properties_typeProperties_url": {
 			"value": "@{linkedService().StorageAccountName}"
 		},
-		"GenericAzure_LS_properties_typeProperties_server": {
+		"AzureSQL_Generic_LS_properties_typeProperties_server": {
 			"value": "@{linkedService().ServerName}"
 		},
-		"GenericAzure_LS_properties_typeProperties_database": {
+		"AzureSQL_Generic_LS_properties_typeProperties_database": {
 			"value": "@{linkedService().DatabaseName}"
 		}
 	}
