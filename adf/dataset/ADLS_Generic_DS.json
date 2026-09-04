@@ -33,12 +33,15 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "@concat(dataset().SchemaName, '_',dataset().tableName, '.parquet')",
+				"fileName": {
+					"value": "@concat(dataset().SchemaName, '_',dataset().tableName, '.parquet')",
+					"type": "Expression"
+				},
 				"folderPath": {
 					"value": "@concat(dataset().ServerName,\n\t'/',\n\tdataset().DatabaseName,\n\t'/',\n\tdataset().TableName,\n\t'/Year=',\n\tformatDateTime(utcnow(), 'yyyy'),\n\t'/Month=',\n\tformatDateTime(utcnow(), 'MM'),\n\t'/Day=',\n\tformatDateTime(utcnow(), 'dd')\n)",
 					"type": "Expression"
 				},
-				"fileSystem": "test"
+				"fileSystem": "bronze"
 			},
 			"compressionCodec": "snappy"
 		},
