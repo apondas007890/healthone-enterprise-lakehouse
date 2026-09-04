@@ -23,7 +23,17 @@
 					},
 					"dataset": {
 						"referenceName": "AzureSQL_Generic_DS",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"ServerName": {
+								"value": "@pipeline().parameters.ServerName",
+								"type": "Expression"
+							},
+							"DatabaseName": {
+								"value": "@pipeline().parameters.DatabaseName",
+								"type": "Expression"
+							}
+						}
 					},
 					"firstRowOnly": true
 				}
@@ -128,13 +138,16 @@
 		],
 		"parameters": {
 			"ServerName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "sql-healthone-lakehouse-central-india.database.windows.net"
 			},
 			"DatabaseName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "sqldb-healthone-ops"
 			},
 			"StorageAccountName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "https://sthealthonelakehouseci.dfs.core.windows.net"
 			}
 		},
 		"folder": {
