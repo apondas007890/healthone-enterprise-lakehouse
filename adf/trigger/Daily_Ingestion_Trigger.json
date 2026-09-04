@@ -1,17 +1,24 @@
 {
-	"name": "Daily_Ingestion_Trigger",
-	"properties": {
-		"annotations": [],
-		"runtimeState": "Started",
-		"pipelines": [],
-		"type": "ScheduleTrigger",
-		"typeProperties": {
-			"recurrence": {
-				"frequency": "Day",
-				"interval": 1,
-				"startTime": "2026-09-02T01:00:00",
-				"timeZone": "Bangladesh Standard Time"
-			}
-		}
-	}
+  "name": "Daily_Ingestion_Trigger",
+  "properties": {
+    "annotations": [],
+    "runtimeState": "Started",
+    "pipelines": [
+      {
+        "pipelineReference": {
+          "referenceName": "PL_Ingest_SQL_to_ADLS_Master",
+          "type": "PipelineReference"
+        }
+      }
+    ],
+    "type": "ScheduleTrigger",
+    "typeProperties": {
+      "recurrence": {
+        "frequency": "Day",
+        "interval": 1,
+        "startTime": "2026-09-02T01:00:00",
+        "timeZone": "Bangladesh Standard Time"
+      }
+    }
+  }
 }
