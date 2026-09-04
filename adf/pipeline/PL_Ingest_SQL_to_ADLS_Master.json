@@ -61,7 +61,7 @@
 			},
 			"StorageAccountName": {
 				"type": "string",
-				"defaultValue": "https://sthealtho1nelakehouseci.dfs.core.windows.net"
+				"defaultValue": "https://sthealthonelakehouseci.dfs.core.windows.net"
 			}
 		},
 		"folder": {
