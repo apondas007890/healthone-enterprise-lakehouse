@@ -100,7 +100,17 @@
 							"inputs": [
 								{
 									"referenceName": "AzureSQL_Generic_DS",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"ServerName": {
+											"value": "@pipeline().parameters.ServerName",
+											"type": "Expression"
+										},
+										"DatabaseName": {
+											"value": "@pipeline().parameters.DatabaseName",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
