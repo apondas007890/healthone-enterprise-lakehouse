@@ -3,13 +3,42 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ADLS_Generic_LS",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"StorageAccountName": {
+					"value": "@dataset().StorageAccountName",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"ServerName": {
+				"type": "string"
+			},
+			"DatabaseName": {
+				"type": "string"
+			},
+			"SchemaName": {
+				"type": "string"
+			},
+			"TableName": {
+				"type": "string"
+			},
+			"StorageAccountName": {
+				"type": "string"
+			}
 		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation"
+				"type": "AzureBlobFSLocation",
+				"fileName": "@concat(dataset().SchemaName, '_',dataset().tableName, '.parquet')",
+				"folderPath": {
+					"value": "@concat(dataset().ServerName,\n\t'/',\n\tdataset().DatabaseName,\n\t'/',\n\tdataset().TableName,\n\t'/Year=',\n\tformatDateTime(utcnow(), 'yyyy'),\n\t'/Month=',\n\tformatDateTime(utcnow(), 'MM'),\n\t'/Day=',\n\tformatDateTime(utcnow(), 'dd')\n)",
+					"type": "Expression"
+				},
+				"fileSystem": "test"
 			},
 			"compressionCodec": "snappy"
 		},
