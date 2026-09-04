@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT t.name AS tableName, SCHEMA_NAME(t.schema_id) AS schemaName FROM sys.tables as t",
+						"sqlReaderQuery": "SELECT t.name AS TableName, SCHEMA_NAME(t.schema_id) AS SchemaName FROM sys.tables as t",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -96,7 +96,29 @@
 							"outputs": [
 								{
 									"referenceName": "ADLS_Generic_DS",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"ServerName": {
+											"value": "@pipeline().parameters.ServerName",
+											"type": "Expression"
+										},
+										"DatabaseName": {
+											"value": "@pipeline().parameters.DatabaseName",
+											"type": "Expression"
+										},
+										"SchemaName": {
+											"value": "@item().SchemaName",
+											"type": "Expression"
+										},
+										"TableName": {
+											"value": "@item().TableName",
+											"type": "Expression"
+										},
+										"StorageAccountName": {
+											"value": "@pipeline().parameters.StorageAccountName",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
