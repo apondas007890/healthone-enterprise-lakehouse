@@ -1,1 +1,209 @@
-a
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "contentVersion": "1.0.0.0",
+        "triggers": {
+            "Recurrence": {
+                "type": "Recurrence",
+                "recurrence": {
+                    "frequency": "Minute",
+                    "interval": 30,
+                    "timeZone": "Bangladesh Standard Time"
+                }
+            }
+        },
+        "actions": {
+            "List_files_in_folder": {
+                "type": "ApiConnection",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "name": "@parameters('$connections')['onedriveforbusiness-1']['connectionId']"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/datasets/default/foldersV2/@{encodeURIComponent(encodeURIComponent('b!hoYJcQ7HH0-ROsiKiqQQPqH_eHWlTpFMlF1-aUS2LKe4kIpw9tFcRbzi0Yzfpz71.01T3U3VPYBEBG4BMZJABAJAMJPVKKL77JX'))}",
+                    "queries": {
+                        "skipToken": "",
+                        "top": 50
+                    }
+                },
+                "runAfter": {},
+                "metadata": {
+                    "b!hoYJcQ7HH0-ROsiKiqQQPqH_eHWlTpFMlF1-aUS2LKe4kIpw9tFcRbzi0Yzfpz71.01T3U3VPYBEBG4BMZJABAJAMJPVKKL77JX": "/healthone-enterprise-onedrive"
+                }
+            },
+            "For_each": {
+                "type": "Foreach",
+                "foreach": "@body('List_files_in_folder')?['value']",
+                "actions": {
+                    "Get_Blob_Metadata_(V2)": {
+                        "runAfter": {},
+                        "type": "ApiConnection",
+                        "inputs": {
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['azureblob']['connectionId']"
+                                }
+                            },
+                            "method": "get",
+                            "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('sthealthonelakehouseci'))}/files/@{encodeURIComponent(encodeURIComponent(concat('/bronze/onedrive_landing/', items('For_each')?['Name'])))}/metadata"
+                        }
+                    },
+                    "Condition": {
+                        "type": "If",
+                        "expression": {
+                            "or": [
+                                {
+                                    "equals": [
+                                        "@actions('Get_Blob_Metadata_(V2)')?['status']",
+                                        "Failed"
+                                    ]
+                                },
+                                {
+                                    "greater": [
+                                        "@items('For_each')?['LastModified']",
+                                        "@body('Get_Blob_Metadata_(V2)')?['LastModified']"
+                                    ]
+                                }
+                            ]
+                        },
+                        "actions": {
+                            "Get_file_content": {
+                                "type": "ApiConnection",
+                                "inputs": {
+                                    "host": {
+                                        "connection": {
+                                            "name": "@parameters('$connections')['onedriveforbusiness-1']['connectionId']"
+                                        }
+                                    },
+                                    "method": "get",
+                                    "path": "/datasets/default/files/@{encodeURIComponent(encodeURIComponent(items('For_each')?['Id']))}/content",
+                                    "queries": {
+                                        "inferContentType": true
+                                    },
+                                    "retryPolicy": {
+                                        "type": "exponential",
+                                        "count": 4,
+                                        "interval": "PT20S"
+                                    }
+                                }
+                            },
+                            "Create_blob_(V2)": {
+                                "type": "ApiConnection",
+                                "inputs": {
+                                    "host": {
+                                        "connection": {
+                                            "name": "@parameters('$connections')['azureblob']['connectionId']"
+                                        }
+                                    },
+                                    "method": "post",
+                                    "body": "@body('Get_file_content')",
+                                    "headers": {
+                                        "ReadFileMetadataFromServer": true
+                                    },
+                                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('sthealthonelakehouseci'))}/files",
+                                    "queries": {
+                                        "folderPath": "/bronze/onedrive_landing",
+                                        "name": "@items('For_each')?['Name']",
+                                        "queryParametersSingleEncoded": true
+                                    },
+                                    "retryPolicy": {
+                                        "type": "exponential",
+                                        "count": 4,
+                                        "interval": "PT20S"
+                                    }
+                                },
+                                "runAfter": {
+                                    "Get_file_content": [
+                                        "Succeeded"
+                                    ]
+                                },
+                                "runtimeConfiguration": {
+                                    "contentTransfer": {
+                                        "transferMode": "Chunked"
+                                    }
+                                }
+                            },
+                            "Send_an_email_(V2)": {
+                                "type": "ApiConnection",
+                                "inputs": {
+                                    "host": {
+                                        "connection": {
+                                            "name": "@parameters('$connections')['office365-1']['connectionId']"
+                                        }
+                                    },
+                                    "method": "post",
+                                    "body": {
+                                        "To": "21-45726-3@student.aiub.edu",
+                                        "Subject": "[ERROR] ADLS Ingestion Failed - @{items('For_each')?['Name']}",
+                                        "Body": "<h3 style=\"color: #d9534f; margin-bottom: 12px;\">ALERT: ADLS Ingestion Failed</h3><p>Failed to sync file from OneDrive to ADLS Gen2 Bronze layer.</p><table style=\"border-collapse: collapse; width: 100%; font-family: Segoe UI, sans-serif; font-size: 14px;\"><tr><td style=\"padding: 6px 10px; font-weight: bold; width: 160px; background-color: #f4f4f4; border: 1px solid #ddd;\">File Name:</td><td style=\"padding: 6px 10px; border: 1px solid #ddd;\">@{items('For_each')?['Name']}</td></tr><tr><td style=\"padding: 6px 10px; font-weight: bold; background-color: #f4f4f4; border: 1px solid #ddd;\">Destination:</td><td style=\"padding: 6px 10px; border: 1px solid #ddd;\">/bronze/onedrive_landing</td></tr><tr><td style=\"padding: 6px 10px; font-weight: bold; background-color: #f4f4f4; border: 1px solid #ddd;\">Timestamp (UTC):</td><td style=\"padding: 6px 10px; border: 1px solid #ddd;\">@{utcNow('yyyy-MM-dd HH:mm:ss')}</td></tr><tr><td style=\"padding: 6px 10px; font-weight: bold; background-color: #f4f4f4; border: 1px solid #ddd;\">Error Details:</td><td style=\"padding: 6px 10px; border: 1px solid #ddd; color: #d9534f;\">@{actions('Create_blob_(V2)')?['error']?['message']}</td></tr></table><br><p style=\"font-size: 13px;\"><strong>Workflow Run ID:</strong> @{workflow()['run']['name']}<br><a href=\"https://portal.azure.com/#view/Microsoft_Azure_LogicApps/WorkflowRunBlade/id/@{encodeURIComponent(concat(workflow()['id'], '/runs/', workflow()['run']['name']))}\">Open Run in Azure Portal</a></p>",
+                                        "Importance": "High"
+                                    },
+                                    "path": "/v2/Mail"
+                                },
+                                "runAfter": {
+                                    "Create_blob_(V2)": [
+                                        "Failed",
+                                        "TimedOut"
+                                    ]
+                                }
+                            }
+                        },
+                        "else": {
+                            "actions": {}
+                        },
+                        "runAfter": {
+                            "Get_Blob_Metadata_(V2)": [
+                                "Succeeded",
+                                "Failed",
+                                "Skipped"
+                            ]
+                        }
+                    }
+                },
+                "runAfter": {
+                    "List_files_in_folder": [
+                        "Succeeded"
+                    ]
+                }
+            }
+        },
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "type": "Object",
+                "defaultValue": {}
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "type": "Object",
+            "value": {
+                "onedriveforbusiness-1": {
+                    "id": "/subscriptions/ea35098f-3915-43e2-b0c1-22aae608551f/providers/Microsoft.Web/locations/centralindia/managedApis/onedriveforbusiness",
+                    "connectionId": "/subscriptions/ea35098f-3915-43e2-b0c1-22aae608551f/resourceGroups/rg-healthone-lakehouse-centralindia/providers/Microsoft.Web/connections/onedriveforbusiness",
+                    "connectionName": "onedriveforbusiness",
+                    "connectionProperties": {}
+                },
+                "azureblob": {
+                    "id": "/subscriptions/ea35098f-3915-43e2-b0c1-22aae608551f/providers/Microsoft.Web/locations/centralindia/managedApis/azureblob",
+                    "connectionId": "/subscriptions/ea35098f-3915-43e2-b0c1-22aae608551f/resourceGroups/rg-healthone-lakehouse-centralindia/providers/Microsoft.Web/connections/azureblob",
+                    "connectionName": "azureblob",
+                    "connectionProperties": {
+                        "authentication": {
+                            "type": "ManagedServiceIdentity"
+                        }
+                    }
+                },
+                "office365-1": {
+                    "id": "/subscriptions/ea35098f-3915-43e2-b0c1-22aae608551f/providers/Microsoft.Web/locations/centralindia/managedApis/office365",
+                    "connectionId": "/subscriptions/ea35098f-3915-43e2-b0c1-22aae608551f/resourceGroups/rg-healthone-lakehouse-centralindia/providers/Microsoft.Web/connections/office365",
+                    "connectionName": "office365",
+                    "connectionProperties": {}
+                }
+            }
+        }
+    }
+}
