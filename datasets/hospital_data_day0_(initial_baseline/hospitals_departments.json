@@ -1,0 +1,70 @@
+{
+  "hospitals": [
+    {
+      "hospital_id": 1,
+      "name": "Dhaka Central Medical Center",
+      "address": "Dhanmondi, Dhaka",
+      "city": "Dhaka",
+      "region": "Dhaka Division",
+      "capacity": 350,
+      "opened_date": "2018-03-15",
+      "created_at": "2026-08-01 08:00:00",
+      "updated_at": "2026-08-01 08:00:00"
+    },
+    {
+      "hospital_id": 2,
+      "name": "Narayanganj General Hospital",
+      "address": "Chashara, Narayanganj",
+      "city": "Narayanganj",
+      "region": "Dhaka Division",
+      "capacity": 220,
+      "opened_date": "2020-07-10",
+      "created_at": "2026-08-01 08:05:00",
+      "updated_at": "2026-08-01 08:05:00"
+    }
+  ],
+  "departments": [
+    {
+      "department_id": 1,
+      "name": "Emergency",
+      "hospital_id": 1,
+      "created_at": "2026-08-01 08:10:00",
+      "updated_at": "2026-08-01 08:10:00"
+    },
+    {
+      "department_id": 2,
+      "name": "Cardiology",
+      "hospital_id": 1,
+      "created_at": "2026-08-01 08:11:00",
+      "updated_at": "2026-08-01 08:11:00"
+    },
+    {
+      "department_id": 3,
+      "name": "General Medicine",
+      "hospital_id": 1,
+      "created_at": "2026-08-01 08:12:00",
+      "updated_at": "2026-08-01 08:12:00"
+    },
+    {
+      "department_id": 4,
+      "name": "Pediatrics",
+      "hospital_id": 2,
+      "created_at": "2026-08-01 08:13:00",
+      "updated_at": "2026-08-01 08:13:00"
+    },
+    {
+      "department_id": 5,
+      "name": "Orthopedics",
+      "hospital_id": 2,
+      "created_at": "2026-08-01 08:14:00",
+      "updated_at": "2026-08-01 08:14:00"
+    },
+    {
+      "department_id": 6,
+      "name": "Radiology",
+      "hospital_id": 2,
+      "created_at": "2026-08-01 08:15:00",
+      "updated_at": "2026-08-01 08:15:00"
+    }
+  ]
+}
