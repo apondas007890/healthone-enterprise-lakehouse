@@ -239,30 +239,6 @@ The view includes calculated insurance and patient payable amounts.
 
 The Gold Layer follows a star-schema style design where fact views connect to descriptive dimension views through business keys.
 
-```text
-                         dim_hospitals
-                              |
-              +---------------+---------------+
-              |               |               |
-              v               v               v
-      dim_departments   dim_doctors     dim_patients
-              |               |               |
-              |               |               |
-              +-------+-------+-------+-------+
-                      |               |
-                      v               v
-               fact_appointments   fact_admissions
-                      |
-                      v
-                fact_billing
-
-
-                    dim_employees
-                         |
-                         v
-                   fact_payroll
-```
-
 ### Main Relationships
 
 | Fact View           | Dimension         | Relationship    |
